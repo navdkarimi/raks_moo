@@ -1,0 +1,33 @@
+{
+  "name": "raqs-e-moo",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.13.0",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "dev": "npm run build -w @raqs/contracts && concurrently -k -n contracts,api,web \"npm run dev -w @raqs/contracts\" \"npm run dev -w @raqs/api\" \"npm run dev -w @raqs/web\"",
+    "build": "npm run build -w @raqs/contracts && npm run build -w @raqs/api && npm run build -w @raqs/web",
+    "typecheck": "npm run build -w @raqs/contracts && npm run typecheck --workspaces --if-present",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "npm run build -w @raqs/contracts && npm run test -w @raqs/api",
+    "check": "npm run lint && npm run typecheck && npm test && npm run format:check"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@types/node": "^20.19.0",
+    "concurrently": "^9.2.0",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "^16.0.0",
+    "prettier": "^3.6.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.0"
+  }
+}
