@@ -9,7 +9,10 @@ export function createHealthRouter(isReady: () => boolean) {
   });
   router.get("/ready", (_req, res) => {
     const ready = isReady();
-    const body: HealthResponse = { status: ready ? "ok" : "not_ready", service: "raqs-api" };
+    const body: HealthResponse = {
+      status: ready ? "ok" : "not_ready",
+      service: "raqs-api",
+    };
     res.status(ready ? 200 : 503).json(body);
   });
   return router;

@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
-  return <html lang="fa" dir="rtl"><body>{children}</body></html>;
+export default function RootLayout({
+  children,
+}: Readonly<{ children: ReactNode }>) {
+  return (
+    <html lang="fa" dir="rtl">
+      <body>{children}</body>
+    </html>
+  );
 }

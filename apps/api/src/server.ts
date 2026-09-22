@@ -1,12 +1,36 @@
 import { createApp } from "./app.js";
 import { readEnv } from "./config/env.js";
-import { connectDatabase, disconnectDatabase, isDatabaseReady } from "./infrastructure/database.js";
+import {
+  connectDatabase,
+  disconnectDatabase,
+  isDatabaseReady,
+} from "./infrastructure/database.js";
+import {
+  AuthRepository,
+  ensureAuthIndexes,
+} from "./modules/auth/auth.repository.js";
+import { AuthService } from "./modules/auth/auth.service.js";
+import { defaultAuthPolicy } from "./modules/auth/auth.policy.js";
+import { UnconfiguredSmsSender } from "./modules/auth/sms-sender.js";
 
 async function start() {
   const env = readEnv();
   await connectDatabase(env.MONGODB_URI, env.NODE_ENV === "production");
+  await ensureAuthIndexes();
   let stopping = false;
-  const app = createApp({ isReady: () => !stopping && isDatabaseReady() });
+  const app = createApp({
+    isReady: () => !stopping && isDatabaseReady(),
+    auth: {
+      service: new AuthService(
+        new AuthRepository(),
+        new UnconfiguredSmsSender(),
+        env.AUTH_SECRET,
+        defaultAuthPolicy,
+      ),
+      origin: env.WEB_ORIGIN,
+      production: env.NODE_ENV === "production",
+    },
+  });
   const server = app.listen(env.PORT, () => {
     console.info(`API listening on port ${env.PORT}`);
   });
@@ -23,7 +47,10 @@ async function start() {
     deadline.unref();
     server.close(() => {
       void disconnectDatabase().then(
-        () => { clearTimeout(deadline); process.exit(0); },
+        () => {
+          clearTimeout(deadline);
+          process.exit(0);
+        },
         () => process.exit(1),
       );
     });
@@ -33,6 +60,8 @@ async function start() {
 }
 
 void start().catch(() => {
-  console.error("API startup failed. Check environment variables and MongoDB connectivity.");
+  console.error(
+    "API startup failed. Check environment variables and MongoDB connectivity.",
+  );
   process.exit(1);
 });
