@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HomePage() {
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-16">
@@ -11,6 +13,12 @@ export default function HomePage() {
         <p className="mt-8 rounded-xl bg-stone-100 px-4 py-3 text-sm text-stone-600">
           فروشگاه در حال آماده‌سازی است.
         </p>
+        <Link
+          href="/login"
+          className="mt-6 inline-flex rounded-xl bg-stone-900 px-6 py-3 text-sm font-bold text-white hover:bg-stone-700 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-800"
+        >
+          ورود یا ساخت حساب
+        </Link>
       </section>
     </main>
   );

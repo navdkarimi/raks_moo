@@ -3,3 +3,6 @@ dist
 .next
 package-lock.json
 next-env.d.ts
+test-results
+playwright-report
+.next-e2e/

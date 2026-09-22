@@ -9,7 +9,8 @@
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test test/app.test.ts test/auth.contract.test.ts",
-    "test:integration": "tsx --test test/auth.integration.test.ts"
+    "test:integration": "tsx --test test/auth.integration.test.ts",
+    "test:browser-server": "tsx test/fixtures/browser-server.ts"
   },
   "dependencies": {
     "@raqs/contracts": "0.1.0",
